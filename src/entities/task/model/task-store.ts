@@ -1,6 +1,7 @@
 import {QueryParams, Todo} from "../../../shared/api/todos/model.ts";
 import {makeObservable, runInAction} from "mobx";
-import {getTodo, getToDoById, updateTodo} from "../../../shared/api/todos";
+import {getToDoById, updateTodo} from "../../../shared/api/todos";
+import {fakeToDos} from "../../../fakedata";
 
 class TaskStore {
     taskList: Todo[] = [];
@@ -17,10 +18,11 @@ class TaskStore {
     getTaskList = async (params: QueryParams) => {
         try {
             this.isLoading = true;
-            const data = await getTodo(params);
+            //const data = await getTodo(params);
+
             runInAction(() => {
                 this.isLoading = false;
-                this.taskList = data;
+                this.taskList = fakeToDos.filter((todo) => todo.completed === params.completed)
             })
         } catch (error) {
             if (error instanceof Error) {
